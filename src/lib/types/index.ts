@@ -8,3 +8,10 @@ export type CreateUserParams = {
     email: string
     avater: string
 }
+
+export type CreateTwittParams = {
+    userId: string
+    content: string
+    parentId?: string
+    children?:string
+}

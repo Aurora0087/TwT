@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { SignOutButton, SignedIn, SignedOut, useAuth } from "@clerk/nextjs";
+import { SignOutButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { sidebarLinks } from '@/constants';
 import Image from 'next/image';
 import { LogIn, LogOut } from 'lucide-react';
@@ -11,8 +11,6 @@ import { LogIn, LogOut } from 'lucide-react';
 function Navigation() {
     const router = useRouter();
     const pathname = usePathname();
-    const { userId } = useAuth();
-    console.log(userId)
 
     return (
         <section className=' flex flex-col gap-10 min-h-screen items-center w-fit py-6'>

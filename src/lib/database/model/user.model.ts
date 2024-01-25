@@ -25,10 +25,10 @@ const userSchema = new mongoose.Schema({
     },
     avater: String,
     bio: String,
-    twittes: [
+    tweetes: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref:"Twitt"
+            ref:"Tweet"
         },
     ],
     followers: [

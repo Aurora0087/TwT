@@ -5,6 +5,8 @@ import { connectToDatabase } from "../database"
 import User from "../database/model/user.model";
 import { CreateUserParams } from "../types"
 import { handleError } from "../utils"
+import Twitt from "../database/model/tweet.model";
+import { error } from "console";
 
 
 export async function createUser(user:CreateUserParams) {
@@ -22,7 +24,20 @@ export async function createUser(user:CreateUserParams) {
 export async function updateUser(user:CreateUserParams) {
     try {
         await connectToDatabase();
+    } catch (error) {
+        handleError(error)
+    }
+}
 
+export async function fatchUser(id:string) {
+    try {
+        await connectToDatabase();
+
+        const user = await User.findById(id)
+        if (!user) {
+            throw new Error("User do not exist.")
+        }
+        return user
     } catch (error) {
         handleError(error)
     }
@@ -37,6 +52,10 @@ export async function deleteUser( clerkId:string) {
         if (!userToDelete) {
             throw new Error('User not found')
         }
+
+        await Twitt.deleteMany({
+            author: userToDelete._id
+        });
 
         // Delete user
         const deletedUser = await User.findByIdAndDelete(userToDelete._id)
