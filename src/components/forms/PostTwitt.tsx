@@ -46,7 +46,6 @@ function PostTwitt({ userId, type }: tweetFormParam) {
 
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
 
         if (type === "CREATE") {
             try {

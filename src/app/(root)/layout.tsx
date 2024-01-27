@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={` relative flex min-h-screen w-screen overflow-hidden bg-slate-800 text-white flex-col items-center ${inter.className}`}>
+        <body className={` relative flex min-h-screen w-screen overflow-x-hidden bg-slate-800 text-white flex-col items-center ${inter.className}`}>
           {/*<TopBar/>*/}
           <main className=" w-screen relative flex flex-row">
             <Leftside />

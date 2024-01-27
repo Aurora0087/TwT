@@ -24,7 +24,12 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     avater: String,
+    profilebg:String,
     bio: String,
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
     tweetes: [
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -41,6 +46,12 @@ const userSchema = new mongoose.Schema({
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
+        }
+    ],
+    likedtweet: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref:"Tweet"
         }
     ]
 })

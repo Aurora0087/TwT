@@ -7,9 +7,10 @@ import { CreateUserParams } from "../types"
 import { handleError } from "../utils"
 import Twitt from "../database/model/tweet.model";
 import { error } from "console";
+import Tweet from "../database/model/tweet.model";
 
-
-export async function createUser(user:CreateUserParams) {
+//================= after someone signup using clerk
+export async function createUser(user: CreateUserParams) {
     try {
         await connectToDatabase();
 
@@ -21,7 +22,7 @@ export async function createUser(user:CreateUserParams) {
     }
 }
 
-export async function updateUser(user:CreateUserParams) {
+export async function updateUser(user: CreateUserParams) {
     try {
         await connectToDatabase();
     } catch (error) {
@@ -29,21 +30,24 @@ export async function updateUser(user:CreateUserParams) {
     }
 }
 
-export async function fatchUser(id:string) {
+
+//================= geting userInfo using database _id
+export async function fatchUser(id: string) {
     try {
         await connectToDatabase();
 
         const user = await User.findById(id)
         if (!user) {
-            throw new Error("User do not exist.")
+            return
         }
-        return user
+        return JSON.parse(JSON.stringify(user))
     } catch (error) {
+        return
         handleError(error)
     }
 }
 
-export async function deleteUser( clerkId:string) {
+export async function deleteUser(clerkId: string) {
     try {
         await connectToDatabase();
 
@@ -63,6 +67,79 @@ export async function deleteUser( clerkId:string) {
 
         return deletedUser ? JSON.parse(JSON.stringify(deletedUser)) : null
 
+    } catch (error) {
+        handleError(error)
+    }
+}
+
+export async function fetchUserPosts(uId: string) {
+    try {
+        connectToDatabase()
+
+        try {
+            await User.findById(uId)
+        } catch (error) {
+            return []
+        }
+        
+
+        const userPosts = await Tweet.find({
+            author: uId,
+            parentId: { $in: [null, undefined] },
+        })
+            .sort({ createdAt: 'desc' })
+            .populate({
+                path: "author",
+                model: User,
+                select: "_id username avater firstName lastName"
+            })
+            .populate({
+                path: "children",
+                populate: {
+                    path: "author",
+                    model: User,
+                    select: "_id username parentId avater",
+                },
+            })
+            .exec();
+
+        return JSON.parse(JSON.stringify(userPosts));
+    } catch (error) {
+        handleError(error)
+    }
+}
+
+export async function fetchUserComments(uId:string) {
+    try {
+        await connectToDatabase()
+
+        try {
+            await User.findById(uId)
+        } catch (error) {
+            return []
+        }
+
+        const userComment = await Tweet.find({
+            author: uId,
+            parentId: { $exists: true, $ne: null },
+        })
+            .sort({ createdAt: 'desc' })
+            .populate({
+                path: "author",
+                model: User,
+                select: "_id username avater firstName lastName"
+            })
+            .populate({
+                path: "children",
+                populate: {
+                    path: "author",
+                    model: User,
+                    select: "_id username parentId avater",
+                },
+            })
+            .exec();
+
+        return JSON.parse(JSON.stringify(userComment));
     } catch (error) {
         handleError(error)
     }

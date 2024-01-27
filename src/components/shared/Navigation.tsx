@@ -13,7 +13,7 @@ function Navigation() {
     const pathname = usePathname();
 
     return (
-        <section className=' flex flex-col gap-10 min-h-screen items-center w-fit py-6'>
+        <section className=' flex flex-col gap-10 h-full items-center w-fit py-6'>
             <div className=' flex flex-col gap-4 items-center justify-between w-full flex-grow'>
                 {
                     sidebarLinks.map((link) => {

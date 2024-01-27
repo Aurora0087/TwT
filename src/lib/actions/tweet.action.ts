@@ -130,3 +130,55 @@ export async function addCommentToTweet(
         handleError(error)
     }
 }
+
+async function fetchAllChildTweet(tweetId: string): Promise<any[]> {
+    await connectToDatabase()
+
+    const childTweetes = await Tweet.find({
+        parentId: tweetId
+    })
+
+    const descendantTweets = []
+    for (const childTweet of childTweetes) {
+        const descendants = await fetchAllChildTweet(childTweet._id)
+        descendantTweets.push(childTweet, ...descendants)
+    }
+    return descendantTweets;
+}
+
+export async function deleteTweetById(tweetId: string) {
+    try {
+        await connectToDatabase();
+
+        const mainTweet = await Tweet.findById(tweetId)
+            .populate("author")
+
+        if (!mainTweet) {
+            throw new Error("Tweet not found.")
+        }
+        const descendantTweets = await fetchAllChildTweet(tweetId)
+
+        const descendantTweetIds = [
+            tweetId, ...descendantTweets.map((tweet) => tweet._id),
+        ]
+        const uniqueAuthorIds = new Set(
+            [
+                ...descendantTweets.map((tweet) => tweet.author?._id?.toString()),
+                mainTweet.author?._id?.toString(),
+            ].filter((tweetId) => tweetId !== undefined)
+        )
+
+        await Tweet.deleteMany({
+            _id: { $in: descendantTweetIds }
+        })
+
+        await User.updateMany(
+            { _id: { $in: Array.from(uniqueAuthorIds) } },
+            { $pull: { tweetes: { $in: descendantTweetIds } } }
+        )
+        revalidatePath("/")
+    } catch (error) {
+
+    }
+}
+

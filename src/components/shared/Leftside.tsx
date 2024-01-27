@@ -3,8 +3,8 @@ import Navigation from './Navigation'
 
 function Leftside() {
     return (
-        <header className='h-screen justify-end lg:flex-grow md:min-w-[150px] hidden sm:flex border-r-[.5px] border-white border-opacity-50 overflow-auto'>
-            <div className=' h-fit px-4'>
+        <header className=' relative justify-end lg:flex-grow md:min-w-[150px] hidden sm:flex'>
+            <div className=' sticky top-0 h-screen px-4  border-r-[.5px] border-white border-opacity-50 overflow-auto'>
                 <Navigation/>
             </div>
         </header>

@@ -79,3 +79,22 @@
 pre{
   font-family: inherit;
 }
+
+.left{
+  transition: transform 0.25s ease-in-out;
+}
+.right{
+  transition: transform 0.25s ease-in-out;
+}
+.hover-move{
+  position: relative;
+}
+
+.hover-move:hover{
+  .left{
+    transform: translateX(-.5rem);
+  }
+  .right{
+    transform: translateX(.5rem);
+  }
+}
