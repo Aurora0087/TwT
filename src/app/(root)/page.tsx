@@ -1,15 +1,15 @@
 import TweetCard from "@/components/cards/TweetCard";
+import LoadPosts from "@/components/shared/LoadPosts";
 import { fatchTweets } from "@/lib/actions/tweet.action";
 import { auth } from "@clerk/nextjs";
 
 
 export default async function Home() {
 
-  const res = await fatchTweets();
+  const res = await fatchTweets(1,10);
   const { sessionClaims } = auth()
     
   const userId = sessionClaims?.userId as string
-
   return (
     <div className=" w-full h-full p-6">
       <h1 className=' text-2xl font-semibold pb-4 border-b border-white border-opacity-20'>Home</h1>
@@ -23,7 +23,7 @@ export default async function Home() {
           ) : (
               <>
                 {
-                  res.posts.map((tweet) => {
+                  res.posts.map((tweet:any) => {
                     return (
                       <TweetCard
                         key={tweet._id}
@@ -39,6 +39,7 @@ export default async function Home() {
                     )
                   })
                 }
+                <LoadPosts isNext={res.isNext} currentUserId={userId} type={"ALL-TWEET"} />
               </>
           )
         }

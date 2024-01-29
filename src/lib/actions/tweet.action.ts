@@ -31,11 +31,11 @@ export async function createTweet({ userId, content }: CreateTwittParams) {
     }
 }
 
-export async function fatchTweets(pageNumber = 1, pageSize = 20) {
+export async function fatchTweets(pageNumber = 1, pageSize = 10) {
     try {
-        await connectToDatabase();
+        await connectToDatabase()
 
-        const skipAmount = (pageNumber - 1) * pageSize;
+        const skipAmount = (pageNumber - 1) * pageSize
 
         const postsQuery = Tweet.find({ parentId: { $in: [null, undefined] } })
             .sort({ createdAt: "desc" })
@@ -63,7 +63,7 @@ export async function fatchTweets(pageNumber = 1, pageSize = 20) {
 
         const isNext = totalPostsCount > skipAmount + posts.length;
 
-        return { posts, isNext };
+        return { posts:JSON.parse(JSON.stringify(posts)), isNext };
 
     } catch (error: any) {
         throw new Error(`Failed to get tweetes: ${error.message}`);

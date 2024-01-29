@@ -19,9 +19,4 @@ export const sidebarLinks = [
         route: "/post-tweet",
         label: "Create Tweet",
     },
-    {
-        imgURL: "/assets/user.svg",
-        route: "/profile",
-        label: "Profile",
-    },
 ];

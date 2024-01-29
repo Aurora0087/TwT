@@ -2,7 +2,7 @@ import React from 'react'
 
 function searchPage() {
     return (
-        <div>searchPage</div>
+        <div className='flex flex-col w-full min-h-screen'>searchPage</div>
     )
 }
 

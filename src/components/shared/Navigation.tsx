@@ -6,9 +6,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { SignOutButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { sidebarLinks } from '@/constants';
 import Image from 'next/image';
-import { LogIn, LogOut } from 'lucide-react';
+import { Home, LogIn, LogOut, User } from 'lucide-react';
 
-function Navigation() {
+function Navigation({currentUser}:{currentUser:string}) {
     const router = useRouter();
     const pathname = usePathname();
 
@@ -21,7 +21,7 @@ function Navigation() {
                         return (
                             <Link href={link.route}
                                 key={link.label}
-                                className={`flex gap-2 items-center whitespace-nowrap rounded-full hover:bg-slate-50/5 p-3 w-full ${isActive && " text-blue-500"}`}>
+                                className={`flex gap-2 items-center whitespace-nowrap rounded-full hover:bg-slate-50/5 p-1 md:p-3 w-full ${isActive && " text-blue-500"}`}>
                                 <Image
                                     src={link.imgURL}
                                     alt={link.label}
@@ -35,15 +35,10 @@ function Navigation() {
                         )
                     })
                 }
-            </div>
-            <div className='flex items-center p-3 w-full'>
                 <SignedIn>
-                    <SignOutButton>
-                        <div className='flex gap-2 cursor-pointer hover:text-slate-50/80'>
-                            <LogOut />
-                            <p className=' hidden lg:flex'>Logout</p>
-                        </div>
-                    </SignOutButton>
+                    <Link href={`/profile/${currentUser}`}>
+                    <User/>
+                    </Link>
                 </SignedIn>
                 <SignedOut>
                     <Link href='/sign-in' >

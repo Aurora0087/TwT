@@ -72,22 +72,27 @@ export async function deleteUser(clerkId: string) {
     }
 }
 
-export async function fetchUserPosts(uId: string) {
+export async function fetchUserPosts(uId: string,pageNumber = 1, pageSize = 10) {
     try {
         connectToDatabase()
 
         try {
             await User.findById(uId)
         } catch (error) {
-            return []
+            return {
+                userPosts: [],
+                isNext:false,
+            }
         }
-        
+        const skipAmount = (pageNumber -1)* pageSize
 
         const userPosts = await Tweet.find({
             author: uId,
             parentId: { $in: [null, undefined] },
         })
             .sort({ createdAt: 'desc' })
+            .skip(skipAmount)
+            .limit(pageSize)
             .populate({
                 path: "author",
                 model: User,
@@ -102,28 +107,45 @@ export async function fetchUserPosts(uId: string) {
                 },
             })
             .exec();
+        
+        const totalPostsCount = await Tweet.countDocuments({
+            author: uId,
+            parentId: { $in: [null, undefined] },
+        })
 
-        return JSON.parse(JSON.stringify(userPosts));
+        const isNext = totalPostsCount > (skipAmount+userPosts.length)
+
+        return {
+            userPosts: JSON.parse(JSON.stringify(userPosts)),
+            isNext:isNext,
+        }
     } catch (error) {
         handleError(error)
     }
 }
 
-export async function fetchUserComments(uId:string) {
+export async function fetchUserComments(uId:string,pageNumber = 1, pageSize = 10) {
     try {
         await connectToDatabase()
 
         try {
             await User.findById(uId)
         } catch (error) {
-            return []
+            return {
+                userComment: [],
+                isNext:false,
+            }
         }
+
+        const skipAmount = (pageNumber-1)*pageSize
 
         const userComment = await Tweet.find({
             author: uId,
             parentId: { $exists: true, $ne: null },
         })
             .sort({ createdAt: 'desc' })
+            .skip(skipAmount)
+            .limit(pageSize)
             .populate({
                 path: "author",
                 model: User,
@@ -138,8 +160,18 @@ export async function fetchUserComments(uId:string) {
                 },
             })
             .exec();
+        
+        const totalCommentCount = await Tweet.countDocuments({
+            author: uId,
+            parentId: { $exists: true, $ne: null },
+        })
 
-        return JSON.parse(JSON.stringify(userComment));
+        const isNext = totalCommentCount>(skipAmount + userComment.length)
+
+        return {
+            userComment: JSON.parse(JSON.stringify(userComment)),
+            isNext:isNext,
+        };
     } catch (error) {
         handleError(error)
     }

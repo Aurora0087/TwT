@@ -7,7 +7,7 @@ import { Heart, MessageCircle, MoreHorizontal, MoveUp } from 'lucide-react';
 import DropDownTweet from '../shared/DropDownTweet';
 
 
-interface tweetProps {
+export interface tweetProps {
     id: string;
     currentUserId: string;
     parentId: string | null;

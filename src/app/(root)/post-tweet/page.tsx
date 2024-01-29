@@ -7,7 +7,7 @@ function postTweetPage() {
     
   const userId = sessionClaims?.userId as string
   return (
-    <div className='flex flex-col justify-center'>
+    <div className='flex flex-col justify-center h-screen'>
       <PostTwitt userId={userId} type={"CREATE"} />
     </div>
   )
