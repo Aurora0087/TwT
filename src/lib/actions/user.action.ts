@@ -176,3 +176,59 @@ export async function fetchUserComments(uId:string,pageNumber = 1, pageSize = 10
         handleError(error)
     }
 }
+
+export async function fetchUserLikedTweet(uId:string,pageNumber = 1, pageSize = 10) {
+    try {
+        if (uId.length < 1) {
+            throw new Error("User id not given")
+        }
+
+        await connectToDatabase()
+
+        const user = await User.findById(uId)
+
+        if (!user) {
+            return {
+                userLiked: [],
+                isNext:false,
+            }
+        }
+        const skipAmount = (pageNumber - 1) * pageSize
+
+        const userLikedTweets = await Tweet.find(
+            {
+                _id: { $in: user.likedtweet },
+            },
+        )
+            .sort({ createdAt: 'desc' })
+            .skip(skipAmount)
+            .limit(pageSize)
+            .populate({
+                path: "author",
+                model: User,
+                select: "_id username avater firstName lastName"
+            })
+            .populate({
+                path: "children",
+                populate: {
+                    path: "author",
+                    model: User,
+                    select: "_id username parentId avater",
+                },
+            })
+            .exec();
+        
+        const totalLikedTweet = await Tweet.countDocuments({
+            id: { $in: user.likedtweet },
+        })
+
+        const isNext = totalLikedTweet > (skipAmount + userLikedTweets.length)
+        
+        return {
+            userLiked: JSON.parse(JSON.stringify(userLikedTweets)),
+            isNext:isNext,
+        }
+    } catch (error) {
+        handleError(error)
+    }
+}

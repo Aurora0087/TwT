@@ -1,10 +1,13 @@
+"use client"
+
 import { formatDateString } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from '../ui/button';
-import { Heart, MessageCircle, MoreHorizontal, MoveUp } from 'lucide-react';
+import { Bookmark, Heart, LucideKeyboard, MessageCircle, MoveUp } from 'lucide-react';
 import DropDownTweet from '../shared/DropDownTweet';
+import { toggelLikeTweet } from '@/lib/actions/tweet.action';
 
 
 export interface tweetProps {
@@ -20,7 +23,6 @@ export interface tweetProps {
         lastName: string;
     };
     likes: {
-
     }[],
     createdAt: string;
     comments: {
@@ -42,8 +44,19 @@ function TweetCard({
     comments,
     isComment,
 }: tweetProps) {
-
     const isAuthor = currentUserId === author._id
+    const [likeCount, setLikeCount] = useState(likes.length)
+
+    const [isLiked, setIsLiked] = useState(likes.find((l)=>l===currentUserId)? true:false)
+
+
+    async function likeButton() {
+        await toggelLikeTweet(id, currentUserId).then((res) => {
+            setLikeCount(res.likes.length)
+            setIsLiked(res.likes.find((l:string)=>l===currentUserId)? true:false)
+        })
+    }
+
     return (
         <div className=' w-full h-fit flex flex-col gap-2 bg-slate-500/10 p-6 rounded-t-xl relative'>
             {isAuthor && (
@@ -68,10 +81,10 @@ function TweetCard({
                     </Link>
                     <div className='flex flex-col gap-2 overflow-hidden'>
                         <div className='flex gap-2 items-center'>
-                            <span className=' font-semibold'>{`${author.firstName} ${author.lastName}`}</span>
+                            <p className=' font-semibold'>{`${author.firstName} ${author.lastName}`}</p>
                             <Link href={`/profile/${author._id}`} className=' text-slate-400 '>{`@${author.username}`}</Link>
                             ·
-                            <span className=' text-sm'>{formatDateString(createdAt)}</span>
+                            <p className=' text-sm'>{createdAt}</p>
                         </div>
                         <div className='flex flex-col gap-4'>
                             <Link href={`/tweet/${id}`} className=' w-fit line-clamp-6'>
@@ -80,14 +93,17 @@ function TweetCard({
                                 </pre>
                             </Link>
                             <div className='flex justify-between'>
-                                <Link href={`/tweet/${id}`} className='flex items-center text-white cursor-pointer'>
+                                <Link href={`/tweet/${id}`} className='flex items-center text-white cursor-pointer hover:text-blue-500'>
                                     <MessageCircle className='hover:text-blue-500' />
                                     {comments.length}
                                 </Link>
-                                <span className='flex gap-1 items-center text-white cursor-pointer'>
-                                    <Heart className='hover:text-red-500' />
-                                    {likes.length}
-                                </span>
+                                <button onClick={()=>{likeButton()}} className='flex gap-1 items-center text-white cursor-pointer hover:text-red-500'>
+                                    <Heart className={`${isLiked && "text-red-500"}`} />
+                                    {likeCount}
+                                </button>
+                                <button className=' hover:text-purple-500'>
+                                    <Bookmark/>
+                                </button>
                             </div>
                         </div>
                     </div>

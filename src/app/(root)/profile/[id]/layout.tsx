@@ -18,8 +18,9 @@ export default async function RootLayout({
     const isAuther = user?._id === currentUserId
     return (
         <>
-            <BackButton />
-            <section className=" px-4 flex flex-col">
+            
+            <section className=" px-4 flex flex-col min-h-screen">
+                <BackButton />
                 {
                     user === undefined || null  ?
                         (

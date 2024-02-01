@@ -36,8 +36,9 @@ function Navigation({currentUser}:{currentUser:string}) {
                     })
                 }
                 <SignedIn>
-                    <Link href={`/profile/${currentUser}`}>
-                    <User/>
+                    <Link href={`/profile/${currentUser}`} className={`flex gap-2 items-center whitespace-nowrap rounded-full hover:bg-slate-50/5 p-1 md:p-3 w-full ${(pathname.includes("profile")) && "text-blue-500"}`}>
+                        <User />
+                        <p className=' hidden lg:flex'>Profile</p>
                     </Link>
                 </SignedIn>
                 <SignedOut>

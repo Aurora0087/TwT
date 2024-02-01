@@ -182,3 +182,42 @@ export async function deleteTweetById(tweetId: string) {
     }
 }
 
+export async function toggelLikeTweet(tweetId:string,uId:string) {
+    try {
+        if (tweetId.length < 1 || uId.length < 0) {
+            throw new Error("User id or Tweet Id are not given.")
+        }
+        await connectToDatabase()
+
+        const tweet = await Tweet.findById(tweetId)
+        const user = await User.findById(uId)
+
+        if (!user) {
+            throw new Error("Use not found.")
+        }
+
+        if (!tweet) {
+            throw new Error("Tweet not found")
+        }
+
+        const tweetIndex = user.likedtweet.indexOf(tweetId)
+        const likedIndex = tweet.likes.indexOf(uId)
+
+        //inside tweet model
+        if (likedIndex === -1 && tweetIndex === -1) {
+            tweet.likes.push(uId)
+            user.likedtweet.push(tweetId)
+        } else {
+            tweet.likes.splice(likedIndex, 1)
+            user.likedtweet.splice(tweetId,1)
+        }
+
+        await user.save()
+        await tweet.save()
+
+        revalidatePath("/")
+        return JSON.parse(JSON.stringify(tweet));
+    } catch (error) {
+        handleError
+    }
+}

@@ -1,6 +1,7 @@
 import TweetCard from "@/components/cards/TweetCard";
 import LoadPosts from "@/components/shared/LoadPosts";
 import { fatchTweets } from "@/lib/actions/tweet.action";
+import { formatDateString } from "@/lib/utils";
 import { auth } from "@clerk/nextjs";
 
 
@@ -32,7 +33,7 @@ export default async function Home() {
                         parentId={tweet.parentId}
                         content={tweet.content}
                         author={tweet.author}
-                        createdAt={tweet.createdAt}
+                        createdAt={formatDateString(tweet.createdAt)}
                         likes={tweet.likes}
                         comments={tweet.children}
                       />

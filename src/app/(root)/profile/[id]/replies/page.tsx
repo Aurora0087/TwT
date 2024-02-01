@@ -1,6 +1,7 @@
 import TweetCard from '@/components/cards/TweetCard'
 import LoadPosts from '@/components/shared/LoadPosts'
 import { fetchUserComments } from '@/lib/actions/user.action'
+import { formatDateString } from '@/lib/utils'
 import { auth } from '@clerk/nextjs'
 import React from 'react'
 
@@ -24,7 +25,7 @@ async function page({ params }: { params: { id: string } }) {
               comments={comment.children}
               likes={comment.likes}
               content={comment.content}
-              createdAt={comment.createdAt.toString()}
+              createdAt={formatDateString(comment.createdAt.toString())}
               isComment={true}
             />
           </div>

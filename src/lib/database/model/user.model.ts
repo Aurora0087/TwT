@@ -1,4 +1,21 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
+
+interface IUser extends Document {
+    _id: string;
+    clerkId: string;
+    username: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
+    profilebg?: string;
+    bio?: string;
+    createdAt: Date;
+    tweetes: Schema.Types.ObjectId[];
+    followers: Schema.Types.ObjectId[];
+    following: Schema.Types.ObjectId[];
+    likedtweet: Schema.Types.ObjectId[];
+}
 
 const userSchema = new mongoose.Schema({
     clerkId: {

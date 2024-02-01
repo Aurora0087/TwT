@@ -4,6 +4,7 @@ import { Button } from '../ui/button'
 import Link from 'next/link'
 import { CalendarDays } from 'lucide-react'
 import { formatDateString } from '@/lib/utils'
+import { SignOutButton } from '@clerk/nextjs'
 
 type profileCardProp = {
     uId: string,
@@ -51,7 +52,20 @@ function ProfileCard(
                 </div>
                 <div className=' h-[100px] relative flex flex-col px-6'>
                     <div className=' h-20 flex justify-end py-6'>
-                        {isAuther && <Link href={`/profile/${uId}/edit`}><Button variant={"outline"} className=' bg-inherit rounded-full capitalize'> edit profile</Button></Link>}
+                        {isAuther &&
+                            <div className=' flex gap-2'>
+                            <Link href={`/profile/${uId}/edit`}>
+                                <Button variant={"outline"} className=' bg-inherit rounded-full capitalize'>
+                            edit profile
+                            </Button>
+                            </Link>
+                            <SignOutButton>
+                                <Button variant={"destructive"} className=' rounded-full'>
+                                    Log Out
+                                </Button>
+                            </SignOutButton>
+                            </div>
+                            }
                     </div>
                     <div className=' absolute top-[-50px] left-6 rounded-full overflow-hidden w-fit border-2 border-transparent hover:border-green-500'>
                         <Image

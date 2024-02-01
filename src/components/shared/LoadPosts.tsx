@@ -6,6 +6,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import TweetCard from '../cards/TweetCard'
 import { fetchUserComments, fetchUserPosts } from '@/lib/actions/user.action'
+import { formatDateString } from '@/lib/utils'
 
 interface loadPostsProp {
     isNext: boolean,
@@ -66,7 +67,7 @@ function LoadPosts({ isNext, currentUserId, type, uId }: loadPostsProp) {
                                 parentId={tweet.parentId}
                                 content={tweet.content}
                                 author={tweet.author}
-                                createdAt={tweet.createdAt}
+                                createdAt={formatDateString(tweet.createdAt)}
                                 likes={tweet.likes}
                                 comments={tweet.children}
                             />

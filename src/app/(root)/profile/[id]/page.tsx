@@ -1,6 +1,7 @@
 import TweetCard from '@/components/cards/TweetCard'
 import LoadPosts from '@/components/shared/LoadPosts'
 import { fetchUserPosts } from '@/lib/actions/user.action'
+import { formatDateString } from '@/lib/utils'
 import { auth } from '@clerk/nextjs'
 import { MoveLeft } from 'lucide-react'
 import Link from 'next/link'
@@ -36,7 +37,7 @@ async function profilePage({ params }: { params: { id: string } }) {
                             comments={tweet.children}
                             likes={tweet.likes}
                             content={tweet.content}
-                            createdAt={tweet.createdAt.toString()}
+                            createdAt={formatDateString(tweet.createdAt.toString())}
                         />
                     </div>
                 ))
