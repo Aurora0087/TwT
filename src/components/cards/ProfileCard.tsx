@@ -52,7 +52,8 @@ function ProfileCard(
                 </div>
                 <div className=' h-[100px] relative flex flex-col px-6'>
                     <div className=' h-20 flex justify-end py-6'>
-                        {isAuther &&
+                        {isAuther ?(
+                            <>
                             <div className=' flex gap-2'>
                             <Link href={`/profile/${uId}/edit`}>
                                 <Button variant={"outline"} className=' bg-inherit rounded-full capitalize'>
@@ -65,6 +66,14 @@ function ProfileCard(
                                 </Button>
                             </SignOutButton>
                             </div>
+                            </>
+                        ) : (
+                                <div className=' flex gap-4 justify-center'>
+                                    <Button className=' capitalize rounded-full px-6 bg-white  text-gray-900 hover:text-white'>
+                                        follow
+                                    </Button>
+                                </div>
+                        )
                             }
                     </div>
                     <div className=' absolute top-[-50px] left-6 rounded-full overflow-hidden w-fit border-2 border-transparent hover:border-green-500'>

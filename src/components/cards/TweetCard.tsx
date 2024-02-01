@@ -8,6 +8,7 @@ import { Button } from '../ui/button';
 import { Bookmark, Heart, LucideKeyboard, MessageCircle, MoveUp } from 'lucide-react';
 import DropDownTweet from '../shared/DropDownTweet';
 import { toggelLikeTweet } from '@/lib/actions/tweet.action';
+import {useRouter} from 'next/navigation'
 
 
 export interface tweetProps {
@@ -44,6 +45,9 @@ function TweetCard({
     comments,
     isComment,
 }: tweetProps) {
+
+    const router = useRouter()
+
     const isAuthor = currentUserId === author._id
     const [likeCount, setLikeCount] = useState(likes.length)
 
@@ -51,6 +55,10 @@ function TweetCard({
 
 
     async function likeButton() {
+        if (!currentUserId) {
+            router.push("/sign-in")
+            return
+        }
         await toggelLikeTweet(id, currentUserId).then((res) => {
             setLikeCount(res.likes.length)
             setIsLiked(res.likes.find((l:string)=>l===currentUserId)? true:false)
@@ -101,7 +109,7 @@ function TweetCard({
                                     <Heart className={`${isLiked && "text-red-500"}`} />
                                     {likeCount}
                                 </button>
-                                <button className=' hover:text-purple-500'>
+                                <button className=' hover:text-blue-500'>
                                     <Bookmark/>
                                 </button>
                             </div>

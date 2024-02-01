@@ -5,13 +5,13 @@ import { Dot, Loader2 } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import TweetCard from '../cards/TweetCard'
-import { fetchUserComments, fetchUserPosts } from '@/lib/actions/user.action'
+import { fetchUserComments, fetchUserLikedTweet, fetchUserPosts } from '@/lib/actions/user.action'
 import { formatDateString } from '@/lib/utils'
 
 interface loadPostsProp {
     isNext: boolean,
     currentUserId: string,
-    type: "ALL-TWEET" | "REPLY" | "USER-TWEET" | "USER-REPLY",
+    type: "ALL-TWEET" | "REPLY" | "USER-TWEET" | "USER-REPLY"|"USER-LIKE",
     uId?: string,
 }
 
@@ -44,6 +44,12 @@ function LoadPosts({ isNext, currentUserId, type, uId }: loadPostsProp) {
             const res = await fetchUserComments(uId!,page)
             setLoad(res?.isNext!)
             setTweets([...tweets, ...res?.userComment])
+            setPage((p) => p + 1)
+        }
+        else if (type === "USER-LIKE") {
+            const res = await fetchUserLikedTweet(uId!,page)
+            setLoad(res?.isNext!)
+            setTweets([...tweets, ...res?.userLiked])
             setPage((p) => p + 1)
         }
     }

@@ -1,4 +1,5 @@
 import TweetCard from '@/components/cards/TweetCard'
+import LoadPosts from '@/components/shared/LoadPosts'
 import { fetchUserLikedTweet } from '@/lib/actions/user.action'
 import { formatDateString } from '@/lib/utils'
 import { auth } from '@clerk/nextjs'
@@ -12,8 +13,6 @@ async function page({ params }: { params: { id: string } }) {
   const { sessionClaims } = auth()
 
   const userId = sessionClaims?.userId as string
-
-  console.log(likedTweet?.userLiked)
   return (
     <section className=' flex flex-col py-4 h-full'>
       {
@@ -22,9 +21,9 @@ async function page({ params }: { params: { id: string } }) {
             <h3 className=' text-slate-500 text-xl font-semibold'>no liked tweets</h3>
           </div>
         ) : (
-            <div className=' flex flex-col gap-4'>
+          <div className=' flex flex-col gap-4'>
             {
-                likedTweet?.userLiked.map((tweet: any) => (
+              likedTweet?.userLiked.map((tweet: any) => (
                 <div key={tweet._id} className=' border-b border-white/20'>
                   <TweetCard
                     id={tweet._id}
@@ -37,8 +36,14 @@ async function page({ params }: { params: { id: string } }) {
                     createdAt={formatDateString(tweet.createdAt.toString())}
                   />
                 </div>
-                ))
+              ))
             }
+            <LoadPosts
+              type="USER-LIKE"
+              uId={params.id}
+              currentUserId={userId}
+              isNext={likedTweet?.isNext!}
+            />
           </div>
         )
       }

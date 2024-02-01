@@ -38,7 +38,6 @@ const userSchema = new mongoose.Schema({
     },
     lastName: {
         type: String,
-        required: true
     },
     avater: String,
     profilebg:String,

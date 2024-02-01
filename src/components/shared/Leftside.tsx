@@ -7,6 +7,8 @@ function Leftside() {
     const { sessionClaims } = auth()
 
     const currentUserId = sessionClaims?.userId as string
+
+    console.log(currentUserId)
     
     return (
         <header className=' relative justify-end lg:flex-grow md:min-w-[150px] hidden sm:flex'>
